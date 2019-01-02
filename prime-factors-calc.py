@@ -4,39 +4,14 @@ import math
 
 # This function calculates all the possible factors for the given number.
 def find_number_factors(factored_number):
-
-    initial_factor = int(math.sqrt(factored_number))
-    found_factors_list = []
-
-    while initial_factor > 1:
-        if factored_number % initial_factor == 0:
-            found_factors_list.append(initial_factor)
-        initial_factor = initial_factor - 1
-    return found_factors_list
+    initial_factor = int(factored_number / 2)
+    return [i for i in range(2, initial_factor+1) if factored_number % i == 0]
 
 
 # This function receives a number and a list of its factors, checks wich of the
 # given factors are prime numbers, than adds them to prime_factors_list.
-def find_prime_factors(factored_number, factor_list):
-
-    index_position = 0
-    prime_factor_list = []
-
-    while factored_number > 1:
-        if factored_number % factor_list[index_position] == 0 \
-                and index_position != len(factor_list) - 1:
-            factored_number = factored_number / factor_list[index_position]
-            prime_factor_list.append(factor_list[index_position])
-            if factored_number % factor_list[index_position] == 0 \
-                    and index_position != len(factor_list) - 1:
-                factored_number = factored_number / factor_list[index_position]
-                prime_factor_list.append(factor_list[index_position])
-            else:
-                index_position = index_position + 1
-        else:
-            factored_number = factored_number / factor_list[index_position]
-            prime_factor_list.append(factor_list[index_position])
-    return prime_factor_list
+def find_prime_factors(factor_list):
+    return [i for i in factor_list if len(find_number_factors(i)) == 0]
 
 
 # This function's purpose is to generate a human friendly factorization string.
