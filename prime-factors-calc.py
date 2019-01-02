@@ -4,7 +4,7 @@ import math
 
 # This function calculates all the possible factors for the given number.
 def find_number_factors(factored_number):
-    initial_factor = int(factored_number / 2)
+    initial_factor = int(math.sqrt(factored_number))
     return [i for i in range(2, initial_factor+1) if factored_number % i == 0]
 
 
@@ -13,13 +13,20 @@ def find_number_factors(factored_number):
 def find_prime_factors(factor_list):
     return [i for i in factor_list if len(find_number_factors(i)) == 0]
 
+def find_prime_factorization(factored_number, prime_list):
+    factored = []
+    for i in prime_list:
+        if factored_number % i == 0:
+            factored.append(i)
+            factored.extend(find_prime_factorization((factored_number / i), prime_list))
+            break
+    return factored
+            
 
 # This function's purpose is to generate a human friendly factorization string.
 def beauty_factors(factor_list):
-
     power = 1
     factorization = ''
-
     for _i_ in range(len(factor_list)):
         try:
             if factor_list[_i_] == factor_list[_i_ + 1]:
