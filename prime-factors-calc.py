@@ -4,9 +4,12 @@ import math
 
 # This function calculates all the possible factors for the given number.
 def find_number_factors(factored_number):
-    initial_factor = int(math.sqrt(factored_number))
-    return [i for i in range(2, initial_factor+1) if factored_number % i == 0]
-
+    iterable = []
+    if factored_number > 2:
+        iterable.append(2)
+        initial_factor = int(factored_number/2 + 1)
+        iterable.extend(list(range(3,initial_factor,2)))
+    return [i for i in iterable if factored_number % i == 0]
 
 # This function receives a number and a list of its factors, checks wich of the
 # given factors are prime numbers, than adds them to prime_factors_list.
@@ -14,14 +17,20 @@ def find_prime_factors(factor_list):
     return [i for i in factor_list if len(find_number_factors(i)) == 0]
 
 def find_prime_factorization(factored_number, prime_list):
-    factored = []
+    factorization = []
     for i in prime_list:
         if factored_number % i == 0:
-            factored.append(i)
-            factored.extend(find_prime_factorization((factored_number / i), prime_list))
+            factorization.append(i)
+            factorization.extend(find_prime_factorization((factored_number / i), prime_list))
             break
-    return factored
-            
+    return factorization
+
+def test():
+    l = []
+    for i in range(100000):
+        if not i & 1:
+            l.append(i)
+    return l
 
 # This function's purpose is to generate a human friendly factorization string.
 def beauty_factors(factor_list):
@@ -61,23 +70,22 @@ print('-> Finding prime factors...')
 
 
 tested_number_factor_list = find_number_factors(tested_number)
-prime_factors = []
+print(f'function 1: {tested_number_factor_list}' )
 
 
 if len(tested_number_factor_list) == 0:
-    print('-> %d is a prime number' % (tested_number))
+    print(f'-> {tested_number} is a prime number')
     log_file.write('\n%d is a prime number' % (tested_number))
 else:
     log_file.write('\nPrime factors found:')
-    for _i_ in range(len(tested_number_factor_list)):
-        if len(find_number_factors(tested_number_factor_list[_i_])) == 0:
-            prime_factors.append(tested_number_factor_list[_i_])
-            print('   -> %d is a prime factor' % (
-                tested_number_factor_list[_i_]))
-            log_file.write('\n    %d' % (tested_number_factor_list[_i_]))
-    result = sorted(find_prime_factors(tested_number, prime_factors))
-    print('-> Prime factorization: %s' % (beauty_factors(result)))
-    log_file.write('\nPrime factorization: %s' % beauty_factors(result))
+    prime_factors = find_prime_factors(tested_number_factor_list)
+    for i in prime_factors:
+        print(f"   -> {i} is a prime factor")
+        log_file.write(f'\n    {i}')
+    factorization = find_prime_factorization(tested_number, prime_factors)
+    print(factorization)
+    print('-> Prime factorization: %s' % (beauty_factors(factorization)))
+    log_file.write('\nPrime factorization: %s' % beauty_factors(factorization))
 
 
 process_time = datetime.datetime.now() - initial_time
